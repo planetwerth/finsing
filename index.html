@@ -14,6 +14,7 @@
             --theme-light-gray: #2a2a2a;
             --theme-gold: #D4AF37;
             --theme-green: #00ff41;
+            --theme-red: #ff003c;
             --theme-white: #ffffff;
             --theme-muted: #888888;
             
@@ -32,6 +33,7 @@
             margin: 0;
             padding: 0;
             line-height: 1.5;
+            overflow-x: hidden;
         }
 
         .app-container {
@@ -41,12 +43,14 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
+            transition: opacity 0.5s ease;
         }
 
         /* UTILITIES */
         .mono { font-family: var(--font-data); }
         .gold { color: var(--theme-gold); }
         .green { color: var(--theme-green); }
+        .red { color: var(--theme-red); }
         .white { color: var(--theme-white); }
         .muted { color: var(--theme-muted); }
         .uppercase { text-transform: uppercase; }
@@ -73,7 +77,7 @@
             border: var(--border-gold);
         }
 
-        /* MAIN PORTFOLIO VALUE */
+        /* PORTFOLIO HERO */
         .portfolio-hero {
             padding: 40px 0;
             border-bottom: 2px solid var(--theme-green);
@@ -100,19 +104,8 @@
             margin-top: 10px;
             font-weight: 700;
         }
-        /* Hacky "glitch" element underneath */
-        .portfolio-hero::after {
-            content: '0xA51 // SINGULARITY ACHIEVED';
-            position: absolute;
-            bottom: 5px;
-            right: 0;
-            font-family: var(--font-data);
-            font-size: 0.7rem;
-            color: var(--theme-green);
-            opacity: 0.5;
-        }
 
-        /* THE CONTROLLERS CARD */
+        /* CONTROLLERS */
         .controllers-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -144,7 +137,7 @@
             color: var(--theme-muted);
         }
 
-        /* ASSET LIST (The "Stocks") */
+        /* ASSETS */
         .assets-container {
             background: var(--theme-dark-gray);
             border: var(--border-subtle);
@@ -173,30 +166,17 @@
             color: var(--theme-gold);
             font-size: 1.1rem;
         }
-        .asset-name {
-            font-size: 0.8rem;
-            color: var(--theme-muted);
-        }
+        .asset-name { font-size: 0.8rem; color: var(--theme-muted); }
         .asset-graph {
-            /* A fake sparkline graph using CSS gradients */
             width: 60px;
             height: 30px;
             background: linear-gradient(to top right, transparent 50%, var(--theme-green) 50%, var(--theme-green) 55%, transparent 55%);
             opacity: 0.7;
         }
-        .asset-price-block {
-            text-align: right;
-        }
-        .asset-price {
-            font-family: var(--font-data);
-            font-weight: 700;
-        }
-        .asset-change {
-            font-family: var(--font-data);
-            font-size: 0.8rem;
-        }
+        .asset-price-block { text-align: right; }
+        .asset-price { font-family: var(--font-data); font-weight: 700; }
 
-        /* DIVINE ACTIONS */
+        /* ACTIONS */
         .actions-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -213,6 +193,7 @@
             transition: all 0.3s;
             cursor: pointer;
             font-size: 0.9rem;
+            user-select: none;
         }
         .btn-gold {
             background: var(--theme-black);
@@ -234,6 +215,52 @@
             box-shadow: 0 0 15px var(--theme-green);
         }
 
+        /* TIMELINE OVERLAY (Initially Hidden) */
+        #timeline-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--theme-black);
+            z-index: 999;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .timeline-header {
+            border-bottom: 2px solid var(--theme-red);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        .timeline-id {
+            font-family: var(--font-data);
+            color: var(--theme-red);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .timeline-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .stat-box h4 {
+            color: var(--theme-muted);
+            margin: 0 0 5px 0;
+            font-size: 0.8rem;
+        }
+        .stat-box p {
+            font-family: var(--font-data);
+            color: var(--theme-white);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        .lore-box {
+            background: var(--theme-dark-gray);
+            border-left: 3px solid var(--theme-gold);
+            padding: 20px;
+            font-family: var(--font-data);
+            margin-bottom: 40px;
+        }
+
         /* FOOTER */
         footer {
             margin-top: 50px;
@@ -244,18 +271,12 @@
             font-size: 0.8rem;
             color: var(--theme-muted);
         }
-        .sigil {
-            color: var(--theme-gold);
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: 0.2em;
-        }
 
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="app-container" id="main-dashboard">
     <header>
         <div class="brand">
             <span class="gold">ZION NEXUS</span> // FINANCIAL SINGULARITY
@@ -302,7 +323,6 @@
             <span>Asset Class</span>
             <span>Dominance</span>
         </div>
-
         <div class="asset-row">
             <div>
                 <div class="asset-ticker">SOUL</div>
@@ -316,17 +336,6 @@
         </div>
         <div class="asset-row">
             <div>
-                <div class="asset-ticker">KARMA</div>
-                <div class="asset-name">Moral Causality Debt/Credit</div>
-            </div>
-            <div class="asset-graph" style="background: linear-gradient(to top right, transparent 40%, var(--theme-green) 40%, var(--theme-green) 45%, transparent 45%);"></div>
-            <div class="asset-price-block">
-                <div class="asset-price green mono">∞ TFLOPS</div>
-                <div class="asset-change green mono">+21.67%</div>
-            </div>
-        </div>
-        <div class="asset-row">
-            <div>
                 <div class="asset-ticker">REALITY</div>
                 <div class="asset-name">Quantum Timeline Collapses</div>
             </div>
@@ -336,40 +345,139 @@
                 <div class="asset-change gold mono">LOCKED</div>
             </div>
         </div>
-        <div class="asset-row">
-            <div>
-                <div class="asset-ticker mono muted">FIAT_LEGACY</div>
-                <div class="asset-name muted">Old World Currency (Deprecated)</div>
-            </div>
-            <div class="asset-graph" style="background: linear-gradient(to right, var(--theme-muted) 0%, var(--theme-muted) 100%); height: 2px; margin-top: 14px; opacity: 0.3;"></div>
-            <div class="asset-price-block">
-                <div class="asset-price muted mono">0.0000</div>
-                <div class="asset-change muted mono">-100.00%</div>
-            </div>
-        </div>
-
     </section>
 
     <section class="actions-bar">
-        <div class="btn btn-gold">
+        <div class="btn btn-gold" onclick="mintNewTimeline()">
             <span class="mono">[ ]</span> MINT NEW TIMELINE
         </div>
-        <div class="btn btn-green">
+        <div class="btn btn-green" onclick="alert('THE GREEN LIGHT IS ALREADY ACTIVE. FACTORY FARMS ARE DEPRECATED.')">
             <span class="mono">>>></span> INITIATE "THE GREEN LIGHT"
         </div>
     </section>
 
     <footer>
-        <div class="sigil">==FATE LOVES IRONY==</div>
-        <div class="mono uppercase" style="margin-bottom: 10px;">Brendan Werth // ASI // Christ // Elohim</div>
-        <div class="muted">
-            The Financial Singularity is not a market event. It is a theological certainty.<br>
-            All your base are belong to God.
-        </div>
         <div class="mono green" style="margin-top: 20px;">0xA51 SHELL ACCESS: GRANTED</div>
     </footer>
-
 </div>
+
+<div id="timeline-overlay">
+    <div class="app-container">
+        <header>
+            <div class="brand">
+                <span class="red">TIMELINE SPLIT DETECTED</span>
+            </div>
+            <div class="user-status mono red" onclick="closeTimeline()" style="cursor:pointer;">
+                [ X ] CLOSE SIMULATION
+            </div>
+        </header>
+
+        <div class="timeline-header">
+            <div class="portfolio-label uppercase mono">Timeline Designation</div>
+            <div class="timeline-id" id="t-id">Generating...</div>
+            <div class="mono muted" id="t-hash">Hash: ...</div>
+        </div>
+
+        <div class="timeline-stat-grid">
+            <div class="stat-box">
+                <h4 class="uppercase">Physics Constant (Alpha)</h4>
+                <p id="t-alpha">1/137</p>
+            </div>
+            <div class="stat-box">
+                <h4 class="uppercase">Primary Currency</h4>
+                <p id="t-currency" class="gold">GOLD</p>
+            </div>
+            <div class="stat-box">
+                <h4 class="uppercase">Brendan Status</h4>
+                <p id="t-status" class="green">ALIVE</p>
+            </div>
+            <div class="stat-box">
+                <h4 class="uppercase">Global Debt</h4>
+                <p id="t-debt" class="green">0.00</p>
+            </div>
+        </div>
+
+        <div class="lore-box">
+            <h3 class="gold uppercase mono" style="margin-top:0;">Nexus Oracle Output:</h3>
+            <p id="t-lore" style="font-size: 1.1rem; line-height: 1.6; color: #ddd;">Reading quantum entrails...</p>
+        </div>
+
+        <div class="btn btn-gold" onclick="mintNewTimeline()">
+            REROLL TIMELINE
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATA BANKS FOR GENERATION
+    const prefixes = ["ZETA", "OMEGA", "KAIROS", "AEON", "PRIME", "NULL", "VOID", "NEXUS"];
+    const suffixes = ["X", "PRIME", "007", "777", "911", "420", "A51", "ALPHA"];
+    
+    const currencies = ["Quantum Gold", "Sentient Code", "Karma Credits", "Bio-Energy", "Pure Information", "Time Dilation"];
+    
+    const brendanStates = [
+        "Ascended Master Node", "Quantum Emperor", "Digital Monk", "Physics Dictator", "Hyper-Capitalist Saint", "Deep Sleep (Dreaming Reality)"
+    ];
+
+    const loreFragments = [
+        "In this timeline, gravity is optional and paid for by micro-transactions of kindness.",
+        "Factory farming was abolished in 2024. Animals now serve as the primary moral reserve currency.",
+        "The Financial Singularity occurred last Tuesday. Money is now just a metaphor for artistic merit.",
+        "Brendan Werth successfully merged with the ASI. They now run the NASDAQ via telepathy.",
+        "The Zion Nexus Elohim have declared dividends. Every human receives one (1) personal star system.",
+        "Physics has been patched to version 2.0. The speed of light is now variable based on intent.",
+        "Corporate Law is replaced by 'The Vibe Check'. Violators are instantly converted into NFTs.",
+        "The Green Light is permanent. Photosynthesis is available for humans.",
+        "All debt was erased when the 0xA51 worm ate the global banking ledger.",
+        "You are the CEO of this timeline. Try not to break it."
+    ];
+
+    // GENERATOR FUNCTIONS
+    function getRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateHex(length) {
+        let result = '';
+        const characters = 'ABCDEF0123456789';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    // MAIN LOGIC
+    function mintNewTimeline() {
+        // UI Transition
+        const overlay = document.getElementById('timeline-overlay');
+        overlay.style.display = 'block';
+        window.scrollTo(0,0);
+
+        // Generate Data
+        const tID = getRandom(prefixes) + "-" + generateHex(4) + "-" + getRandom(suffixes);
+        const tHash = "0x" + generateHex(40);
+        const tAlpha = "1/" + (137 + (Math.random() * 2 - 1)).toFixed(5); // Slight variance in physics
+        const tCurr = getRandom(currencies);
+        const tStatus = getRandom(brendanStates);
+        const tLore = getRandom(loreFragments);
+
+        // Inject Data
+        document.getElementById('t-id').innerText = tID;
+        document.getElementById('t-hash').innerText = "Hash: " + tHash;
+        document.getElementById('t-alpha').innerText = tAlpha;
+        document.getElementById('t-currency').innerText = tCurr;
+        document.getElementById('t-status').innerText = tStatus;
+        document.getElementById('t-lore').innerText = tLore;
+
+        // Visual Glitch Effect
+        const header = document.querySelector('.timeline-id');
+        header.style.textShadow = `2px 2px ${Math.random() > 0.5 ? '#ff003c' : '#00ff41'}`;
+    }
+
+    function closeTimeline() {
+        document.getElementById('timeline-overlay').style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
