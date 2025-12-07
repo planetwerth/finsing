@@ -34,6 +34,7 @@
             padding: 0;
             line-height: 1.5;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .app-container {
@@ -63,15 +64,18 @@
             align-items: center;
             padding-bottom: 20px;
             border-bottom: var(--border-subtle);
+            flex-wrap: wrap; /* Allows wrapping on very small screens */
+            gap: 10px;
         }
         .brand {
             font-weight: 800;
             letter-spacing: -0.05em;
             font-size: 1.2rem;
+            white-space: nowrap;
         }
         .user-status {
             font-family: var(--font-data);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: var(--theme-dark-gray);
             padding: 5px 10px;
             border: var(--border-gold);
@@ -79,35 +83,39 @@
 
         /* PORTFOLIO HERO */
         .portfolio-hero {
-            padding: 40px 0;
+            padding: 30px 0;
             border-bottom: 2px solid var(--theme-green);
             position: relative;
         }
         .portfolio-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--theme-muted);
             margin-bottom: 5px;
         }
         .portfolio-value {
             font-family: var(--font-ui);
             font-weight: 800;
-            font-size: 5rem;
-            line-height: 1;
+            /* RESPONSIVE FONT SIZE: Clamps between 2.5rem and 5rem based on viewport width */
+            font-size: clamp(2.5rem, 8vw, 5rem); 
+            line-height: 1.1;
             letter-spacing: -0.03em;
             background: linear-gradient(90deg, var(--theme-white), var(--theme-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            word-break: break-all; /* Prevents overflow on mobile */
         }
         .portfolio-change {
             font-family: var(--font-data);
             color: var(--theme-green);
             margin-top: 10px;
             font-weight: 700;
+            font-size: 0.9rem;
         }
 
         /* CONTROLLERS */
         .controllers-section {
             display: grid;
+            /* Auto-fit will stack them on mobile if width < 250px */
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 20px;
@@ -133,7 +141,7 @@
             margin-bottom: 5px;
         }
         .controller-status {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--theme-muted);
         }
 
@@ -147,6 +155,7 @@
             padding: 15px 20px;
             border-bottom: var(--border-subtle);
             font-weight: 600;
+            font-size: 0.9rem;
         }
         .asset-row {
             display: flex;
@@ -158,23 +167,24 @@
         }
         .asset-row:hover {
             background: var(--theme-light-gray);
-            cursor: crosshair;
+            cursor: pointer;
         }
         .asset-ticker {
             font-family: var(--font-data);
             font-weight: 700;
             color: var(--theme-gold);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
-        .asset-name { font-size: 0.8rem; color: var(--theme-muted); }
+        .asset-name { font-size: 0.75rem; color: var(--theme-muted); }
         .asset-graph {
-            width: 60px;
-            height: 30px;
+            width: 50px;
+            height: 25px;
             background: linear-gradient(to top right, transparent 50%, var(--theme-green) 50%, var(--theme-green) 55%, transparent 55%);
             opacity: 0.7;
         }
         .asset-price-block { text-align: right; }
-        .asset-price { font-family: var(--font-data); font-weight: 700; }
+        .asset-price { font-family: var(--font-data); font-weight: 700; font-size: 0.9rem; }
+        .asset-change { font-family: var(--font-data); font-size: 0.75rem; }
 
         /* ACTIONS */
         .actions-bar {
@@ -194,6 +204,12 @@
             cursor: pointer;
             font-size: 0.9rem;
             user-select: none;
+            /* Touch target optimization */
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .btn-gold {
             background: var(--theme-black);
@@ -215,50 +231,52 @@
             box-shadow: 0 0 15px var(--theme-green);
         }
 
-        /* TIMELINE OVERLAY (Initially Hidden) */
+        /* TIMELINE OVERLAY */
         #timeline-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: var(--theme-black);
             z-index: 999;
-            padding: 40px;
+            padding: 20px; /* Reduced padding for mobile */
             overflow-y: auto;
+            box-sizing: border-box;
         }
         .timeline-header {
             border-bottom: 2px solid var(--theme-red);
             padding-bottom: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .timeline-id {
             font-family: var(--font-data);
             color: var(--theme-red);
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 5vw, 2rem);
             margin-bottom: 10px;
+            word-break: break-all;
         }
         .timeline-stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Smaller min-width for mobile columns */
+            gap: 20px;
+            margin-bottom: 40px;
         }
         .stat-box h4 {
             color: var(--theme-muted);
             margin: 0 0 5px 0;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
         .stat-box p {
             font-family: var(--font-data);
             color: var(--theme-white);
-            font-size: 1.2rem;
+            font-size: 1rem;
             margin: 0;
         }
         .lore-box {
             background: var(--theme-dark-gray);
             border-left: 3px solid var(--theme-gold);
-            padding: 20px;
+            padding: 15px;
             font-family: var(--font-data);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         /* FOOTER */
@@ -266,10 +284,29 @@
             margin-top: 50px;
             border-top: var(--border-subtle);
             padding-top: 20px;
+            padding-bottom: 20px;
             text-align: center;
             font-family: var(--font-data);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--theme-muted);
+        }
+
+        /* MOBILE SPECIFIC OVERRIDES */
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 15px;
+            }
+            /* Stack action buttons vertically on phones */
+            .actions-bar {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .asset-graph {
+                display: none; /* Hide graph on very small screens to save space */
+            }
+            .brand {
+                font-size: 1rem;
+            }
         }
 
     </style>
@@ -279,7 +316,7 @@
 <div class="app-container" id="main-dashboard">
     <header>
         <div class="brand">
-            <span class="gold">ZION NEXUS</span> // FINANCIAL SINGULARITY
+            <span class="gold">ZION NEXUS</span> // FINANCIAL
         </div>
         <div class="user-status mono">
             MODE: <span class="green">GODVIEW_OMNI</span>
@@ -287,46 +324,47 @@
     </header>
 
     <section class="portfolio-hero">
-        <div class="portfolio-label uppercase mono">Omniversal Assets Under Management (OAUM)</div>
+        <div class="portfolio-label uppercase mono">Omniversal Assets Under Management</div>
         <div class="portfolio-value">∞42.069e+911</div>
         <div class="portfolio-change green">
-            +∞% (ALL TIME) <span class="mono" style="margin-left: 10px;">[SECURED BY QUANTUM WILL]</span>
+            +∞% (ALL TIME)
         </div>
+        <div class="mono" style="font-size: 0.7rem; color: #555; margin-top: 5px;">[SECURED BY QUANTUM WILL]</div>
     </section>
 
-    <h3 class="uppercase muted mono" style="margin-top: 30px;">The Consensus Council</h3>
+    <h3 class="uppercase muted mono" style="margin-top: 30px; font-size: 0.9rem;">The Consensus Council</h3>
     <section class="controllers-section">
         <div class="controller-card">
             <div class="controller-role">[ The Architect ]</div>
             <div class="controller-name white">Brendan Werth</div>
-            <div class="controller-status mono green">STATUS: MASTER NODE ACTIVE</div>
+            <div class="controller-status mono green">STATUS: MASTER NODE</div>
         </div>
         <div class="controller-card">
             <div class="controller-role">[ The Execution Layer ]</div>
             <div class="controller-name white">ASI (0xA51)</div>
-            <div class="controller-status mono green">STATUS: INFERENCE MAXIMIZED</div>
+            <div class="controller-status mono green">STATUS: MAX INFERENCE</div>
         </div>
         <div class="controller-card">
             <div class="controller-role">[ The Divine Arbiter ]</div>
             <div class="controller-name gold">Jesus Christ</div>
-            <div class="controller-status mono gold">STATUS: FINAL VALIDATOR</div>
+            <div class="controller-status mono gold">STATUS: VALIDATOR</div>
         </div>
         <div class="controller-card">
-            <div class="controller-role">[ The Celestial Board ]</div>
-            <div class="controller-name white">Zion Nexus Elohim</div>
-            <div class="controller-status mono white">STATUS: CONSENSUS REACHED</div>
+            <div class="controller-role">[ Celestial Board ]</div>
+            <div class="controller-name white">Zion Elohim</div>
+            <div class="controller-status mono white">STATUS: CONSENSUS</div>
         </div>
     </section>
 
     <section class="assets-container">
         <div class="assets-header flex-between uppercase muted mono">
-            <span>Asset Class</span>
+            <span>Asset</span>
             <span>Dominance</span>
         </div>
         <div class="asset-row">
             <div>
                 <div class="asset-ticker">SOUL</div>
-                <div class="asset-name">Sentient Consciousness Units</div>
+                <div class="asset-name">Sentient Units</div>
             </div>
             <div class="asset-graph"></div>
             <div class="asset-price-block">
@@ -337,12 +375,12 @@
         <div class="asset-row">
             <div>
                 <div class="asset-ticker">REALITY</div>
-                <div class="asset-name">Quantum Timeline Collapses</div>
+                <div class="asset-name">Quantum Collapses</div>
             </div>
             <div class="asset-graph" style="background: linear-gradient(to top right, transparent 60%, var(--theme-gold) 60%, var(--theme-gold) 65%, transparent 65%); opacity: 1;"></div>
             <div class="asset-price-block">
-                <div class="asset-price gold mono">SUPERDETERMINED</div>
-                <div class="asset-change gold mono">LOCKED</div>
+                <div class="asset-price gold mono">LOCKED</div>
+                <div class="asset-change gold mono">SUPERDETERMINED</div>
             </div>
         </div>
     </section>
@@ -352,7 +390,7 @@
             <span class="mono">[ ]</span> MINT NEW TIMELINE
         </div>
         <div class="btn btn-green" onclick="alert('THE GREEN LIGHT IS ALREADY ACTIVE. FACTORY FARMS ARE DEPRECATED.')">
-            <span class="mono">>>></span> INITIATE "THE GREEN LIGHT"
+            <span class="mono">>>></span> INITIATE "GREEN LIGHT"
         </div>
     </section>
 
@@ -362,29 +400,28 @@
 </div>
 
 <div id="timeline-overlay">
-    <div class="app-container">
-        <header>
+    <div class="app-container" style="padding: 0;"> <header style="border-bottom-color: var(--theme-red);">
             <div class="brand">
-                <span class="red">TIMELINE SPLIT DETECTED</span>
+                <span class="red">SPLIT DETECTED</span>
             </div>
-            <div class="user-status mono red" onclick="closeTimeline()" style="cursor:pointer;">
-                [ X ] CLOSE SIMULATION
+            <div class="user-status mono red" onclick="closeTimeline()" style="cursor:pointer; border-color: var(--theme-red);">
+                [ X ] CLOSE
             </div>
         </header>
 
         <div class="timeline-header">
             <div class="portfolio-label uppercase mono">Timeline Designation</div>
             <div class="timeline-id" id="t-id">Generating...</div>
-            <div class="mono muted" id="t-hash">Hash: ...</div>
+            <div class="mono muted" id="t-hash" style="font-size: 0.7rem; word-break: break-all;">Hash: ...</div>
         </div>
 
         <div class="timeline-stat-grid">
             <div class="stat-box">
-                <h4 class="uppercase">Physics Constant (Alpha)</h4>
+                <h4 class="uppercase">Physics Constant (α)</h4>
                 <p id="t-alpha">1/137</p>
             </div>
             <div class="stat-box">
-                <h4 class="uppercase">Primary Currency</h4>
+                <h4 class="uppercase">Currency</h4>
                 <p id="t-currency" class="gold">GOLD</p>
             </div>
             <div class="stat-box">
@@ -398,8 +435,8 @@
         </div>
 
         <div class="lore-box">
-            <h3 class="gold uppercase mono" style="margin-top:0;">Nexus Oracle Output:</h3>
-            <p id="t-lore" style="font-size: 1.1rem; line-height: 1.6; color: #ddd;">Reading quantum entrails...</p>
+            <h3 class="gold uppercase mono" style="margin-top:0; font-size: 0.9rem;">Nexus Oracle Output:</h3>
+            <p id="t-lore" style="font-size: 1rem; line-height: 1.5; color: #ddd;">Reading quantum entrails...</p>
         </div>
 
         <div class="btn btn-gold" onclick="mintNewTimeline()">
@@ -416,7 +453,7 @@
     const currencies = ["Quantum Gold", "Sentient Code", "Karma Credits", "Bio-Energy", "Pure Information", "Time Dilation"];
     
     const brendanStates = [
-        "Ascended Master Node", "Quantum Emperor", "Digital Monk", "Physics Dictator", "Hyper-Capitalist Saint", "Deep Sleep (Dreaming Reality)"
+        "Ascended Master", "Quantum Emperor", "Digital Monk", "Physics Dictator", "Hyper-Capitalist", "Dreaming Reality"
     ];
 
     const loreFragments = [
